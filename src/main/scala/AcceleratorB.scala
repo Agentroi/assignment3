@@ -31,6 +31,8 @@ class AcceleratorB extends Module {
   regCount := regCount + 1.U(32.W)
 
   switch(stateReg) {
+
+    //We make sure all the registers are initialized correctly
     is(idle) {
       when(io.start) {
         stateReg := border
@@ -42,19 +44,30 @@ class AcceleratorB extends Module {
         registers(6) := 0.U(32.W)
       }
     }
+
+    //Border-state takes one cycle pr. pixel in the borders to
+    //write black in the borders. Reg 6 is used to state
+    //which border and to tell when border-state is finished.
     is(border) {
+
+      //Throughout border-state write should be enabled
       io.writeEnable := true.B
       switch(registers(6)) {
+        //Left-most border
         is(0.U(32.W)) {
           io.address := registers(1) + 400.U(32.W)
           io.dataWrite := 255.U(32.W)
           registers(1) := registers(1) + 1.U(32.W)
           registers(4) := registers(4) + 1.U(32.W)
           when(registers(1) === 20.U(32.W)) {
+
+            //To not print pixel number 400 two times we start at Reg1 = 0
+            //The next states Reg1 starts at 1
             registers(1) := 1.U(32.W)
             registers(6) := registers(6) + 1.U(32.W)
           }
         }
+        //Top border
         is(1.U(32.W)) {
           io.address := registers(1) * 20.U(32.W) + 400.U(32.W)
           io.dataWrite := 255.U(32.W)
@@ -65,6 +78,7 @@ class AcceleratorB extends Module {
             registers(6) := registers(6) + 1.U(32.W)
           }
         }
+        //Right-most border
         is(2.U(32.W)) {
           io.address := 19.U(32.W) + (registers(1) * 20.U(32.W)) + 400.U(32.W)
           io.dataWrite := 255.U(32.W)
@@ -75,22 +89,29 @@ class AcceleratorB extends Module {
             registers(6) := registers(6) + 1.U(32.W)
           }
         }
+        //Bottom border
         is(3.U(32.W)) {
           io.address := registers(1) + (19.U(32.W) * 20.U(32.W)) + 400.U(32.W)
           io.dataWrite := 255.U(32.W)
           registers(1) := registers(1) + 1.U(32.W)
           registers(4) := registers(4) + 1.U(32.W)
+
+          //To not print pixel number 800 two times, we finish at 19
           when(registers(1) === 19.U(32.W)) {
             registers(1) := 1.U(32.W)
             registers(6) := registers(6) + 1.U(32.W)
           }
         }
+        //We are finished when Reg6 = 4. Reg1 and Reg2 are set to 1,
+        //so we only cover the inside of the border.
         is (4.U(32.W)) {
           registers(1) := 1.U(32.W)
           stateReg := read
         }
       }
     }
+
+    //Read reads the input and either prints black or calls neighbors
     is(read) {
       registers(4) := registers(1) + registers(2) * 20.U(32.W)
       io.address := registers(4)
