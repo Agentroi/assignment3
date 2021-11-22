@@ -43,34 +43,55 @@ class AcceleratorB extends Module {
       }
     }
     is(border) {
+      io.writeEnable := true.B
       switch(registers(6)) {
         is(0.U(32.W)) {
-          registers(4) := registers(1)
-          stateReg := writeBlack
+          io.address := registers(1) + 400.U(32.W)
+          io.dataWrite := 255.U(32.W)
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := registers(4) + 1.U(32.W)
+          when(registers(1) === 20.U(32.W)) {
+            registers(1) := 1.U(32.W)
+            registers(6) := registers(6) + 1.U(32.W)
+          }
         }
         is(1.U(32.W)) {
-          registers(4) := registers(1) * 20.U(32.W)
-          stateReg := writeBlack
+          io.address := registers(1) * 20.U(32.W) + 400.U(32.W)
+          io.dataWrite := 255.U(32.W)
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := registers(4) + 1.U(32.W)
+          when(registers(1) === 20.U(32.W)) {
+            registers(1) := 1.U(32.W)
+            registers(6) := registers(6) + 1.U(32.W)
+          }
         }
         is(2.U(32.W)) {
-          registers(4) := 19.U(32.W) + (registers(1) * 20.U(32.W))
-          stateReg := writeBlack
+          io.address := 19.U(32.W) + (registers(1) * 20.U(32.W)) + 400.U(32.W)
+          io.dataWrite := 255.U(32.W)
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := registers(4) + 1.U(32.W)
+          when(registers(1) === 20.U(32.W)) {
+            registers(1) := 1.U(32.W)
+            registers(6) := registers(6) + 1.U(32.W)
+          }
         }
         is(3.U(32.W)) {
-          registers(4) := registers(1) + (19.U(32.W) * 20.U(32.W))
-          stateReg := writeBlack
+          io.address := registers(1) + (19.U(32.W) * 20.U(32.W)) + 400.U(32.W)
+          io.dataWrite := 255.U(32.W)
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := registers(4) + 1.U(32.W)
+          when(registers(1) === 19.U(32.W)) {
+            registers(1) := 1.U(32.W)
+            registers(6) := registers(6) + 1.U(32.W)
+          }
         }
         is (4.U(32.W)) {
-          stateReg := writeBlack
+          registers(1) := 1.U(32.W)
+          stateReg := read
         }
       }
     }
     is(read) {
-      when(registers(6) === 4.U(32.W)) {
-        registers(1) := 1.U(32.W)
-        registers(6) := registers(6) + 1.U(32.W)
-        //registers(6) := registers(6) + 1.U(32.W)
-      }
       registers(4) := registers(1) + registers(2) * 20.U(32.W)
       io.address := registers(4)
       registers(5) := io.dataRead
@@ -87,35 +108,17 @@ class AcceleratorB extends Module {
           registers(2) := 1.U(32.W)
           registers(1) := registers(1) + 1.U(32.W)
         }
-      }.otherwise{
+      }.otherwise {
         io.done := true.B
       }
-
       stateReg := writeBlack
     }
-    is(writeBlack){
+
+    is(writeBlack) {
       io.writeEnable := true.B
       io.address := registers(4) + 400.U(32.W)
       io.dataWrite := 255.U(32.W)
       stateReg := read
-      when(registers(6) === 4.U) {
-        registers(1) := 1.U(32.W)
-        registers(2) := 1.U(32.W)
-        stateReg := read
-      }
-      when(registers(6) < 4.U(32.W)) {
-        registers(1) := registers(1) + 1.U(32.W)
-        when(registers(1) < 20.U(32.W)) {
-          stateReg := border
-        } .otherwise {
-          registers(1) := 0.U(32.W)
-          registers(6) := registers(6) + 1.U(32.W)
-          stateReg := border
-        }
-      }
     }
-
   }
-
-
 }
