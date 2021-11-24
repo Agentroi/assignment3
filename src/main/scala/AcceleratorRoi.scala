@@ -68,8 +68,8 @@ class AcceleratorRoi extends Module {
           stateReg := readRoi
         }
       } .otherwise {
-        registers(1) := 19.U(32.W)
-        registers(2) := 0.U(32.W)
+        registers(1) := 20.U(32.W)
+        registers(2) := 1.U(32.W)
         stateReg := writeRoi
       }
     }
@@ -80,19 +80,19 @@ class AcceleratorRoi extends Module {
       io.address := (registers(2) * 20.U(32.W)) - registers(1) + 400.U(32.W)
       //when(valReg(registers(2)+1.U(32.W))(19.U(32.W) - registers(1)) === 1.U(1.W)) {
       when(valReg(registers(2))(registers(1)-1.U(32.W)) === 1.U(1.W) &&
-        valReg(registers(2)-1.U(32.W))(registers(1)-1.U(32.W)) === 1.U(1.W) &&
-        valReg(registers(2)+1.U(32.W))(registers(1)-1.U(32.W)) === 1.U(1.W) &&
-        valReg(registers(2))(registers(1)-2.U(32.W)) === 1.U(1.W) &&
-        valReg(registers(2))(registers(1)) === 1.U(1.W)) {
+        valReg(registers(2)-1.U(32.W))(registers(1)-1.U(32.W)) === 1.U(1.W) && (registers(2) =/= 1.U(32.W)) &&
+        valReg(registers(2)+1.U(32.W))(registers(1)-1.U(32.W)) === 1.U(1.W) && (registers(2) =/= 20.U(32.W)) &&
+        valReg(registers(2))(registers(1)-2.U(32.W)) === 1.U(1.W) && (registers(1) =/= 1.U(32.W)) &&
+        valReg(registers(2))(registers(1)) === 1.U(1.W) && registers(1) =/= 20.U(32.W)) {
         io.dataWrite := 255.U(32.W)
       } .otherwise {
         io.dataWrite := 0.U(32.W)
       }
       when (registers(1) > 0.U(32.W)) {
-        when(registers(2) < 21.U(32.W)) {
+        when(registers(2) < 20.U(32.W)) {
           registers(2) := registers(2) + 1.U(32.W)
           stateReg := writeRoi
-        }.otherwise {
+        }. otherwise {
           registers(2) := 1.U(32.W)
           registers(1) := registers(1) - 1.U(32.W)
           stateReg := writeRoi
