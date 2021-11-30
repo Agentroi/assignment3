@@ -13,7 +13,7 @@ class AcceleratorA_3 extends Module {
   })
 
   val idle  :: writeBlack :: writeWhite :: readRight :: readBottom :: readLeft :: readTop :: readCenter :: leftBorder :: rightBorder :: topBorder :: bottomBorder :: Nil = Enum(12)
-  //  000   :: 001        :: 010        :: 011       :: 100        :: 101      :: 110     :: 111
+  //  0000  :: 0001       :: 0010       :: 0011      :: 0100       :: 0101     :: 0110    :: 0111       :: 1000       :: 1001        :: 1010      :: 1011
 
   //States and registers
   val stateReg = RegInit(idle)

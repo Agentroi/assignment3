@@ -16,7 +16,7 @@ class SystemTop extends Module {
 
   //Creating components
   val dataMemory = Module(new DataMemory())
-  val accelerator = Module(new AcceleratorA_3())
+  val accelerator = Module(new AcceleratorA_2())
 
 
   //Connect done and start

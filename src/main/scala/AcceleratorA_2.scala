@@ -39,7 +39,7 @@ class AcceleratorA_2 extends Module {
     //We make sure all the registers are initialized correctly
     is(idle) {
       when(io.start) {
-        stateReg := readCenter        //For standard run
+        stateReg := topBorder       //For standard run
         registers(1) := 0.U(32.W) //0
         registers(2) := 0.U(32.W) //1
         registers(3) := 0.U(32.W) //0
@@ -52,53 +52,47 @@ class AcceleratorA_2 extends Module {
     }
 
     is(topBorder) {
-      when (registers(1) < 20.U(32.W)) {
+      io.writeEnable := true.B
+      when (registers(1) < 19.U(32.W)) {
         io.address := registers(1) + 400.U(32.W)
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
         registers(1) := registers(1) + 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) + 1.U(32.W)
         stateReg := rightBorder
       }
     }
 
     is(rightBorder) {
+      io.writeEnable := true.B
       when (registers(2) < 19.U(32.W)) {
-        io.address := 19.U(32.W) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
-        io.writeEnable := true.B
+        io.address := registers(1) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
         io.dataWrite := 0.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) + 1.U(32.W)
         stateReg := bottomBorder
       }
     }
 
     is(bottomBorder) {
-      when (registers(1) >= 0.U(32.W)) {
+      io.writeEnable := true.B
+      when (registers(1) > 0.U(32.W)) {
         io.address := registers(1) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
-        registers(2) := registers(1) - 1.U(32.W)
+        registers(1) := registers(1) - 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) - 1.U(32.W)
-        stateReg := bottomBorder
+        stateReg := leftBorder
       }
     }
 
     is(leftBorder) {
+      io.writeEnable := true.B
       when (registers(2) > 0.U(32.W)) {
         io.address :=  400.U(32.W) + (registers(2) * 20.U(32.W))
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
         registers(2) := registers(2) - 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
         registers(1) := 1.U(32.W)
+        registers(2) := 1.U(32.W)
         stateReg := readCenter
       }
     }
