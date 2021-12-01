@@ -1,19 +1,47 @@
-[0m[[0m[0mdebug[0m] [0m[0mPackaging C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\codea3_2.12-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mPackaging E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\assignment3_2.12-0.1.0-SNAPSHOT.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\Accelerator$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\Accelerator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\Accelerator.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\Accelerator.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA_2$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA_2$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA_2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA_2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA_3$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA_3$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorA_3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorA_3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorB$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorB$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorB.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorB.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorC$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorC$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorC.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorC.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorRoi$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorRoi$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	AcceleratorRoi.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\AcceleratorRoi.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BorderCheck$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\BorderCheck$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BorderCheck.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\BorderCheck.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	DataMemory$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\DataMemory$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\DataMemory$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	DataMemory.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\DataMemory.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\DataMemory.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Hello$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\Hello$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\Hello$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Hello.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\Hello.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\Hello.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	SystemTop$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\SystemTop$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\SystemTop$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	SystemTop.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\Asus\Documents\C\codeA3\target\scala-2.12\classes\SystemTop.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes\SystemTop.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m
