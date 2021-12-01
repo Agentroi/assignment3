@@ -1,29 +1,11 @@
 [0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes.bak[0m
 [0m[[0m[0mdebug[0m] [0m[0mAbout to delete class files:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mWe backup class files:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mRegistering generated classes:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Accelerator$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	DataMemory$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	SystemTop.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Hello$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Accelerator.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Accelerator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: E:\OneDrive - Danmarks Tekniske Universitet\3. semester\Computersystemer\assignment3\target\scala-2.12\classes.bak[0m

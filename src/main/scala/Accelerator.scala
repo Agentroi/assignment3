@@ -122,11 +122,13 @@ class Accelerator extends Module {
       }
     }
 
-    //readRoi reads every pixel and saves them as bits in valReg(line)
+    //Decides if a pixel should be eroded or if neighbors need to be checked
     is(readCenter) {
       io.writeEnable := false.B
       isBlack := false.B
       registers(6) := 0.U(32.W)
+
+      //The end of the image is reached
       when (registers(2) === 19.U(32.W)) {
         io.done := true.B
       } .otherwise {
@@ -148,7 +150,12 @@ class Accelerator extends Module {
             registers(6) := 1.U(32.W)
             stateReg := writeBlack
 
-            //Pixel above was white
+
+          } .elsewhen(registers(1) > 0.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
+            registers(6) := 1.U(32.W)
+            stateReg := writeBlack
+
+            //Above pixel was white
           }.otherwise {
             //set address for right of center
             registers(1) := registers(1) + 1.U(32.W)
@@ -156,18 +163,21 @@ class Accelerator extends Module {
 
             stateReg := readRight
           }
+          //Use reg(8) to remember that current pixel is white
           registers(8) := 1.U(32.W)
         }
       }
     }
 
-    //Writes black to
+    //Writes black to pixel in outImage
     is(writeBlack) {
+      //set address
       io.address := registers(4) + 400.U(32.W)
       io.writeEnable := true.B
       io.dataWrite := 0.U(32.W)
 
-      when (registers(5) < 1.U(32.W) && registers(8) =/= 2.U(32.W)) {
+      //When the pixel was orignal white
+      when (registers(8) =/= 2.U(32.W)) {
         //set cache index to white
         cache(registers(1)) := registers(8)
         registers(8) := 2.U(32.W)
@@ -177,18 +187,20 @@ class Accelerator extends Module {
       when (registers(5) > 0.U(32.W)) {
         registers(5) := 0.U(32.W)
         cache(registers(1)) := 2.U(32.W)
+
         //set address for next pixel
-        //if x == 19 -> x = 0
+        //if x == 18 -> x = 1
         when(registers(1) === 18.U(32.W)) {
           registers(1) := 1.U(32.W)
           registers(2) := registers(2) + 1.U(32.W)
+
           //otherwise increment
         } .otherwise {
           registers(1) := registers(1) + 1.U(32.W)
         }
         stateReg := readCenter
 
-        //When pixel is orignal-black and is not at the edge
+        //Else when pixel is orignal-black and is not at the edge we write the neighbor black too
       }.elsewhen(registers(6) === 0.U(32.W) && registers(1) < 18.U(32.W)) {
         registers(1) := registers(1) + 1.U(32.W)
         registers(4) := (registers(1) + registers(2) * 20.U(32.W))
@@ -200,30 +212,38 @@ class Accelerator extends Module {
         when(registers(1) === 18.U(32.W)) {
           registers(1) := 1.U(32.W)
           registers(2) := registers(2) + 1.U(32.W)
+
           //otherwise increment
         } .otherwise {
           registers(1) := registers(1) + 1.U(32.W)
         }
+        //If the neighbor to the right was checked and was black, then write the neighbor black
         when(registers(7) === 0.U(32.W) && registers(1) < 18.U(32.W)) {
           registers(7) := 1.U(32.W)
           stateReg := writeBlack
+
+          //else we return to readCenter
         } .otherwise {
           stateReg := readCenter
         }
       }
     }
 
+    //writes white to pixel in outImage
     is(writeWhite) {
+      //set address
       io.address := registers(4) + 400.U(32.W)
       io.writeEnable := true.B
       io.dataWrite := 255.U(32.W)
+      //save pixel as white in cache
       cache(registers(1)) := 1.U(32.W)
 
       //set address for next pixel
-      //if x == 19 -> x = 0
+      //if x == 18 -> x = 1
       when (registers(1) === 18.U(32.W)) {
         registers(1) := 1.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
+
         //otherwise increment
       } .otherwise {
         registers(1) := registers(1) + 1.U(32.W)
@@ -232,27 +252,30 @@ class Accelerator extends Module {
       stateReg := readCenter
     }
 
+    //reads the right neighbor and saves it in reg(7)
     is(readRight) {
       when (registers(1) < 20.U(32.W)) {
-        //Load dataread to register
+        //set address
         io.address := registers(4)
 
         //when pixel is black
         when(io.dataRead === 0.U(32.W)) {
-          registers(7) := 1.U(32.W)
+          registers(7) := 0.U(32.W)
           //set address back to center
           registers(1) := registers(1) - 1.U(32.W)
           registers(4) := (registers(1) - 1.U(32.W)) + registers(2) * 20.U(32.W)
 
           stateReg := writeBlack
           isBlack := true.B
+          //reg(6) symbolizes that the pixel was orignal white
           registers(6) := 1.U(32.W)
 
         }
       }
       //when pixel is white
       when (isBlack === false.B) {
-        registers(7) := 2.U(32.W)
+        //reg(7) = 1 since right beingbor is white
+        registers(7) := 1.U(32.W)
         //Set address for bottom
         registers(1) := registers(1) - 1.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
@@ -262,6 +285,7 @@ class Accelerator extends Module {
       }
     }
 
+    //reads the bottom neighbor and saves it to cache
     is(readBottom) {
       when(registers(2) < 20.U(32.W)) {
         //Load dataread to register
@@ -275,6 +299,7 @@ class Accelerator extends Module {
 
           stateReg := writeBlack
           isBlack := true.B
+          //reg(6) symbolizes that pixel was original white
           registers(6) := 1.U(32.W)
 
           //when pixel is white
@@ -285,7 +310,7 @@ class Accelerator extends Module {
         registers(2) := registers(2) - 1.U(32.W)
         registers(4) := registers(1) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
 
-        //When top is black
+        //When top is black (
         when ((registers(2) - 1.U(32.W)) > 1.U(32.W) && cache(registers(1)) === 0.U(32.W)) {
           stateReg := writeBlack
           registers(6) := 1.U(32.W)
@@ -295,11 +320,13 @@ class Accelerator extends Module {
           stateReg := writeBlack
           registers(6) := 1.U(32.W)
         } .otherwise {
+          //when pixel is next to left border or top border
           when (registers(1) === 1.U(32.W) || cache(registers(1) - 1.U(32.W)) === 2.U(32.W)) {
             registers(1) := registers(1) - 1.U(32.W)
             registers(2) := registers(2) - 1.U(32.W)
             registers(4) := (registers(1) - 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
             stateReg := readLeft
+            //else when pixel is next to top border or top border
           } .elsewhen((registers(2) - 1.U(32.W)) === 1.U(32.W) || cache(registers(1)) === 2.U(32.W)) {
             registers(2) := registers(2) - 2.U(32.W)
             registers(4) := registers(1) + (registers(2) - 2.U(32.W)) * 20.U(32.W)
@@ -329,7 +356,7 @@ class Accelerator extends Module {
 
       }
       when (isBlack === false.B) {
-        //Set address for top
+        //Set address for top if top pixel was also unknown
         when (cache(registers(1) + 1.U(32.W)) === 2.U(32.W)) {
           registers(1) := registers(1) + 1.U(32.W)
           registers(2) := registers(2) - 1.U(32.W)
