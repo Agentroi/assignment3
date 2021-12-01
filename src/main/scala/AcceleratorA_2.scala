@@ -224,7 +224,7 @@ class AcceleratorA_2 extends Module {
 
           stateReg := writeBlack
           isBlack := true.B
-          registers(6)
+          registers(6) := 1.U(32.W)
 
           //when pixel is white
         }

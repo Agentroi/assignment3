@@ -45,8 +45,10 @@ class AcceleratorA_3 extends Module {
         registers(2) := 0.U(32.W) //1
         registers(3) := 0.U(32.W) //0
         registers(4) := 0.U(32.W) //0
-        registers(5) := 1.U(32.W) //0
+        registers(5) := 0.U(32.W) //0
         registers(6) := 0.U(32.W) //0
+        registers(7) := 0.U(32.W)
+        registers(8) := 2.U(32.W)
         registers(10) := 0.U(32.W)
         registers(11) := 0.U(32.W)
 
@@ -75,53 +77,47 @@ class AcceleratorA_3 extends Module {
     }
 
     is(topBorder) {
-      when (registers(1) < 20.U(32.W)) {
+      io.writeEnable := true.B
+      when (registers(1) < 19.U(32.W)) {
         io.address := registers(1) + 400.U(32.W)
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
         registers(1) := registers(1) + 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) + 1.U(32.W)
         stateReg := rightBorder
       }
     }
 
     is(rightBorder) {
+      io.writeEnable := true.B
       when (registers(2) < 19.U(32.W)) {
-        io.address := 19.U(32.W) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
-        io.writeEnable := true.B
+        io.address := registers(1) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
         io.dataWrite := 0.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) + 1.U(32.W)
         stateReg := bottomBorder
       }
     }
 
     is(bottomBorder) {
-      when (registers(1) >= 0.U(32.W)) {
+      io.writeEnable := true.B
+      when (registers(1) > 0.U(32.W)) {
         io.address := registers(1) + (registers(2) * 20.U(32.W)) + 400.U(32.W)
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
-        registers(2) := registers(1) - 1.U(32.W)
+        registers(1) := registers(1) - 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
-        registers(2) := registers(2) - 1.U(32.W)
-        stateReg := bottomBorder
+        stateReg := leftBorder
       }
     }
 
     is(leftBorder) {
+      io.writeEnable := true.B
       when (registers(2) > 0.U(32.W)) {
         io.address :=  400.U(32.W) + (registers(2) * 20.U(32.W))
-        io.writeEnable := true.B
         io.dataWrite := 0.U(32.W)
         registers(2) := registers(2) - 1.U(32.W)
       } .otherwise {
-        io.writeEnable := false.B
         registers(1) := 1.U(32.W)
+        registers(2) := 1.U(32.W)
         stateReg := readCenter
       }
     }
@@ -160,8 +156,7 @@ class AcceleratorA_3 extends Module {
 
             stateReg := readRight
           }
-          //set cache index to white
-          cache(registers(1)) := 1.U(32.W)
+          registers(8) := 1.U(32.W)
         }
       }
     }
@@ -172,9 +167,16 @@ class AcceleratorA_3 extends Module {
       io.writeEnable := true.B
       io.dataWrite := 0.U(32.W)
 
+      when (registers(5) < 1.U(32.W) && registers(8) =/= 2.U(32.W)) {
+        //set cache index to white
+        cache(registers(1)) := registers(8)
+        registers(8) := 2.U(32.W)
+      }
+
       //If current address is product of being neighbor to a black pixel
       when (registers(5) > 0.U(32.W)) {
         registers(5) := 0.U(32.W)
+        cache(registers(1)) := 2.U(32.W)
         //set address for next pixel
         //if x == 19 -> x = 0
         when(registers(1) === 18.U(32.W)) {
@@ -202,7 +204,12 @@ class AcceleratorA_3 extends Module {
         } .otherwise {
           registers(1) := registers(1) + 1.U(32.W)
         }
-        stateReg := readCenter
+        when(registers(7) === 0.U(32.W) && registers(1) < 18.U(32.W)) {
+          registers(7) := 1.U(32.W)
+          stateReg := writeBlack
+        } .otherwise {
+          stateReg := readCenter
+        }
       }
     }
 
@@ -210,7 +217,7 @@ class AcceleratorA_3 extends Module {
       io.address := registers(4) + 400.U(32.W)
       io.writeEnable := true.B
       io.dataWrite := 255.U(32.W)
-
+      cache(registers(1)) := 1.U(32.W)
 
       //set address for next pixel
       //if x == 19 -> x = 0
@@ -232,6 +239,7 @@ class AcceleratorA_3 extends Module {
 
         //when pixel is black
         when(io.dataRead === 0.U(32.W)) {
+          registers(7) := 1.U(32.W)
           //set address back to center
           registers(1) := registers(1) - 1.U(32.W)
           registers(4) := (registers(1) - 1.U(32.W)) + registers(2) * 20.U(32.W)
@@ -244,6 +252,7 @@ class AcceleratorA_3 extends Module {
       }
       //when pixel is white
       when (isBlack === false.B) {
+        registers(7) := 2.U(32.W)
         //Set address for bottom
         registers(1) := registers(1) - 1.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
@@ -266,18 +275,39 @@ class AcceleratorA_3 extends Module {
 
           stateReg := writeBlack
           isBlack := true.B
-          registers(6)
+          registers(6) := 1.U(32.W)
 
           //when pixel is white
         }
       }
       when (isBlack === false.B) {
-        //Set address for left
-        registers(1) := registers(1) - 1.U(32.W)
+        //set address back to center
         registers(2) := registers(2) - 1.U(32.W)
-        registers(4) := (registers(1) - 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
+        registers(4) := registers(1) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
 
-        stateReg := readLeft
+        //When top is black
+        when ((registers(2) - 1.U(32.W)) > 1.U(32.W) && cache(registers(1)) === 0.U(32.W)) {
+          stateReg := writeBlack
+          registers(6) := 1.U(32.W)
+
+          //when left is black
+        } .elsewhen (registers(1) > 1.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
+          stateReg := writeBlack
+          registers(6) := 1.U(32.W)
+        } .otherwise {
+          when (registers(1) === 1.U(32.W) || cache(registers(1) - 1.U(32.W)) === 2.U(32.W)) {
+            registers(1) := registers(1) - 1.U(32.W)
+            registers(2) := registers(2) - 1.U(32.W)
+            registers(4) := (registers(1) - 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
+            stateReg := readLeft
+          } .elsewhen((registers(2) - 1.U(32.W)) === 1.U(32.W) || cache(registers(1)) === 2.U(32.W)) {
+            registers(2) := registers(2) - 2.U(32.W)
+            registers(4) := registers(1) + (registers(2) - 2.U(32.W)) * 20.U(32.W)
+            stateReg := readTop
+          } .otherwise {
+            stateReg := writeWhite
+          }
+        }
       }
     }
 
@@ -300,11 +330,17 @@ class AcceleratorA_3 extends Module {
       }
       when (isBlack === false.B) {
         //Set address for top
-        registers(1) := registers(1) + 1.U(32.W)
-        registers(2) := registers(2) - 1.U(32.W)
-        registers(4) := (registers(1) + 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
-
-        stateReg := readTop
+        when (cache(registers(1) + 1.U(32.W)) === 2.U(32.W)) {
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(2) := registers(2) - 1.U(32.W)
+          registers(4) := (registers(1) + 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
+          stateReg := readTop
+        } .otherwise {
+          //set address back to center
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := (registers(1) + 1.U(32.W)) + registers(2) * 20.U(32.W)
+          stateReg := writeWhite
+        }
       }
     }
 
