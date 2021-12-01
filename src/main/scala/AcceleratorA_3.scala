@@ -122,7 +122,7 @@ class AcceleratorA_3 extends Module {
       }
     }
 
-    //readRoi reads every pixel and saves them as bits in valReg(line)
+    //
     is(readCenter) {
       io.writeEnable := false.B
       isBlack := false.B
