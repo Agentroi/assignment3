@@ -150,7 +150,7 @@ class Accelerator extends Module {
             registers(6) := 1.U(32.W)
             stateReg := writeBlack
 
-
+          //When left pixel was black
           } .elsewhen(registers(1) > 0.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
             registers(6) := 1.U(32.W)
             stateReg := writeBlack
@@ -310,30 +310,20 @@ class Accelerator extends Module {
         registers(2) := registers(2) - 1.U(32.W)
         registers(4) := registers(1) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
 
-        //When top is black (
-        when ((registers(2) - 1.U(32.W)) > 1.U(32.W) && cache(registers(1)) === 0.U(32.W)) {
-          stateReg := writeBlack
-          registers(6) := 1.U(32.W)
 
-          //when left is black
-        } .elsewhen (registers(1) > 1.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
-          stateReg := writeBlack
-          registers(6) := 1.U(32.W)
+        //when pixel is next to left border or left neighbor is unknown
+        when (registers(1) === 1.U(32.W) || cache(registers(1) - 1.U(32.W)) === 2.U(32.W)) {
+          registers(1) := registers(1) - 1.U(32.W)
+          registers(2) := registers(2) - 1.U(32.W)
+          registers(4) := (registers(1) - 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
+          stateReg := readLeft
+          //else when pixel is next to top border or top neighbor is unknown
+        } .elsewhen((registers(2) - 1.U(32.W)) === 1.U(32.W) || cache(registers(1)) === 2.U(32.W)) {
+          registers(2) := registers(2) - 2.U(32.W)
+          registers(4) := registers(1) + (registers(2) - 2.U(32.W)) * 20.U(32.W)
+          stateReg := readTop
         } .otherwise {
-          //when pixel is next to left border or top border
-          when (registers(1) === 1.U(32.W) || cache(registers(1) - 1.U(32.W)) === 2.U(32.W)) {
-            registers(1) := registers(1) - 1.U(32.W)
-            registers(2) := registers(2) - 1.U(32.W)
-            registers(4) := (registers(1) - 1.U(32.W)) + (registers(2) - 1.U(32.W)) * 20.U(32.W)
-            stateReg := readLeft
-            //else when pixel is next to top border or top border
-          } .elsewhen((registers(2) - 1.U(32.W)) === 1.U(32.W) || cache(registers(1)) === 2.U(32.W)) {
-            registers(2) := registers(2) - 2.U(32.W)
-            registers(4) := registers(1) + (registers(2) - 2.U(32.W)) * 20.U(32.W)
-            stateReg := readTop
-          } .otherwise {
-            stateReg := writeWhite
-          }
+          stateReg := writeWhite
         }
       }
     }
