@@ -151,7 +151,7 @@ class Accelerator extends Module {
             stateReg := writeBlack
 
           //When left pixel was black
-          } .elsewhen(registers(1) > 0.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
+          } .elsewhen(registers(1) > 1.U(32.W) && cache(registers(1) - 1.U(32.W)) === 0.U(32.W)) {
             registers(6) := 1.U(32.W)
             stateReg := writeBlack
 
@@ -218,12 +218,17 @@ class Accelerator extends Module {
           registers(1) := registers(1) + 1.U(32.W)
         }
         //If the neighbor to the right was checked and was black, then write the neighbor black
-        when(registers(7) === 0.U(32.W) && registers(1) < 18.U(32.W)) {
-          registers(7) := 1.U(32.W)
+        when(registers(7) > 0.U(32.W) && registers(1) < 18.U(32.W)) {
+          registers(7) := registers(7) - 1.U(32.W)
+          registers(1) := registers(1) + 1.U(32.W)
+          registers(4) := (registers(1) + 1.U(32.W)) + registers(2) * 20.U(32.W)
           stateReg := writeBlack
 
           //else we return to readCenter
         } .otherwise {
+          when(registers(7) > 0.U(32.W)) {
+            registers(7) := 0.U(32.W)
+          }
           stateReg := readCenter
         }
       }
@@ -260,7 +265,7 @@ class Accelerator extends Module {
 
         //when pixel is black
         when(io.dataRead === 0.U(32.W)) {
-          registers(7) := 0.U(32.W)
+          registers(7) := 2.U(32.W)
           //set address back to center
           registers(1) := registers(1) - 1.U(32.W)
           registers(4) := (registers(1) - 1.U(32.W)) + registers(2) * 20.U(32.W)
@@ -274,8 +279,6 @@ class Accelerator extends Module {
       }
       //when pixel is white
       when (isBlack === false.B) {
-        //reg(7) = 1 since right beingbor is white
-        registers(7) := 1.U(32.W)
         //Set address for bottom
         registers(1) := registers(1) - 1.U(32.W)
         registers(2) := registers(2) + 1.U(32.W)
